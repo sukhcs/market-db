@@ -12,29 +12,25 @@ function initDB() {
         db.createTable('symbol', (succ, msg) => {
             // succ - boolean, tells if the call is successful
             success = succ && success ? true : false;
-            console.log("Success: " + succ);
-            console.log("Message: " + msg);
+            console.log("Create: " + succ + ' Message:', msg);
             message.push(msg);
         });
         db.createTable('quote', (succ, msg) => {
             // succ - boolean, tells if the call is successful
             success = succ && success ? true : false;
-            console.log("Success: " + succ);
-            console.log("Message: " + msg);
+            console.log("Create: " + succ + ' Message:', msg);
             message.push(msg);
         });
         db.createTable('historicalquote', (succ, msg) => {
             // succ - boolean, tells if the call is successful
             success = succ && success ? true : false;
-            console.log("Success: " + succ);
-            console.log("Message: " + msg);
+            console.log("Create: " + succ + ' Message:', msg);
             message.push(msg);
         });
         db.createTable('option-chain', (succ, msg) => {
             // succ - boolean, tells if the call is successful
             success = succ && success ? true : false;
-            console.log("Success: " + succ);
-            console.log("Message: " + msg);
+            console.log("Create: " + succ + ' Message:', msg);
             message.push(msg);
         });
         if(success) {
@@ -62,7 +58,7 @@ function addSymbol(s) {
             let term = s.symbol;
 
             db.search('symbol', 'symbol', term, (succ, data) => {
-                if (succ) {
+                if (succ && data.length > 0) {
                     console.log(data);
                     let where = {
                         "symbol": s.symbol
@@ -74,15 +70,13 @@ function addSymbol(s) {
 
                     db.updateRow('symbol', where, set, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        console.log("Success: " + succ);
-                        console.log("Message: " + msg);
+                        console.log("Update: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 } else {
                     db.insertTableContent('symbol', s, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        console.log("Success: " + succ);
-                        console.log("Message: " + msg);
+                        console.log("Insert: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 }
@@ -111,7 +105,7 @@ function addQuote(q) {
             let term = q.symbol;
 
             db.search('quote', 'symbol', term, (succ, data) => {
-                if (succ) {
+                if (succ && data.length > 0) {
                     console.log(data);
                     let where = {
                         "symbol": q.symbol
@@ -123,15 +117,13 @@ function addQuote(q) {
 
                     db.updateRow('quote', where, set, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        console.log("Success: " + succ);
-                        console.log("Message: " + msg);
+                        console.log("Update: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 } else {
                     db.insertTableContent('quote', q, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        console.log("Success: " + succ);
-                        console.log("Message: " + msg);
+                        console.log("Insert: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 }
@@ -158,7 +150,7 @@ function addHistoricalQuote(q) {
             let term = q.symbol;
 
             db.search('historicalquote', 'symbol', term, (succ, data) => {
-                if (succ) {
+                if (succ && data.length > 0) {
                     console.log(data);
                     let where = {
                         "symbol": q.symbol
@@ -170,15 +162,13 @@ function addHistoricalQuote(q) {
 
                     db.updateRow('historicalquote', where, set, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        console.log("Success: " + succ);
-                        console.log("Message: " + msg);
+                        console.log("Update: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 } else {
                     db.insertTableContent('historicalquote', q, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        console.log("Success: " + succ);
-                        console.log("Message: " + msg);
+                        console.log("Insert: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 }
@@ -205,7 +195,7 @@ function addOptionChainQuote(q) {
             let term = q.symbol;
 
             db.search('option-chain', 'symbol', term, (succ, data) => {
-                if (succ) {
+                if (succ && data.length > 0) {
                     console.log(data);
                     let where = {
                         "symbol": q.symbol
@@ -217,15 +207,13 @@ function addOptionChainQuote(q) {
 
                     db.updateRow('option-chain', where, set, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        console.log("Success: " + succ);
-                        console.log("Message: " + msg);
+                        console.log("Update: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 } else {
                     db.insertTableContent('option-chain', q, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        console.log("Success: " + succ);
-                        console.log("Message: " + msg);
+                        console.log("Insert: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 }

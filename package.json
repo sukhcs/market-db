@@ -1,33 +1,37 @@
 {
-    "name": "market-db",
-    "version": "0.0.1",
-    "description": "Electron module that could be used for storing market data in json based database tables",
-    "main": "index.js",
-    "scripts": {
-        "start": "node index.js",
-        "test": "node test.js"
-    },
-    "author": "Sukhvinder Singh <sukh.chauhan@gmail.com>",
-    "license": "MIT",
-    "dependencies": {
-        "electron-db": "^0.15.7"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/sukhcs/market-db"
-    },
-    "devDependencies": {},
-    "keywords": [
-        "electron",
-        "database",
-        "json database",
-        "json table",
-        "electron database",
-        "electron simple database",
-        "market database",
-        "stock database",
-        "options database",
-        "quote database",
-        "tick database"
-    ]
+  "name": "market-db",
+  "version": "0.0.1",
+  "description": "Electron module that could be used for storing market data in json based database tables",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node test.js"
+  },
+  "author": "Sukhvinder Singh <sukh.chauhan@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "electron-db": "^0.15.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sukhcs/market-db.git"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "electron",
+    "database",
+    "json database",
+    "json table",
+    "electron database",
+    "electron simple database",
+    "market database",
+    "stock database",
+    "options database",
+    "quote database",
+    "tick database"
+  ],
+  "bugs": {
+    "url": "https://github.com/sukhcs/market-db/issues"
+  },
+  "homepage": "https://github.com/sukhcs/market-db#readme"
 }
