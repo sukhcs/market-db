@@ -7,7 +7,7 @@
         "start": "node index.js",
         "test": "node test.js"
     },
-    "author": "Sukhvinder Singh <sukhvinder.singh@outlook.com>",
+    "author": "Sukhvinder Singh <sukh.chauhan@gmail.com>",
     "license": "MIT",
     "dependencies": {
         "electron-db": "^0.15.7"
