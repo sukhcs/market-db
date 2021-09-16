@@ -1,6 +1,6 @@
 {
   "name": "market-db",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Electron module that could be used for storing market data in json based database tables",
   "main": "index.js",
   "scripts": {

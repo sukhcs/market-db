@@ -27,7 +27,7 @@ function initDB() {
             console.log("Create: " + succ + ' Message:', msg);
             message.push(msg);
         });
-        db.createTable('option-chain', (succ, msg) => {
+        db.createTable('optionchain', (succ, msg) => {
             // succ - boolean, tells if the call is successful
             success = succ && success ? true : false;
             console.log("Create: " + succ + ' Message:', msg);
@@ -58,7 +58,7 @@ function addSymbol(s) {
             db.getRows('symbol', {
                 symbol: s.symbol
             }, (succ, result) => {
-                console.log('=====> succ:', succ, " result:", result);
+                console.log('succ:', succ, " result:", result);
                 if (succ && result.length > 0) {
                     console.log(result);
                     let where = {
@@ -104,9 +104,9 @@ function addQuote(q) {
         if (db.valid('quote')) {
             // check if symbol already exists in db
             db.getRows('quote', {
-                symbol: s.symbol
+                symbol: q.symbol
             }, (succ, result) => {
-                console.log('=====> succ:', succ, " result:", result);
+                console.log('succ:', succ, " result:", result);
                 if (succ && result.length > 0) {
                     console.log(result);
                     let where = {
@@ -150,9 +150,9 @@ function addHistoricalQuote(q) {
         if (db.valid('historicalquote')) {
             // check if symbol already exists in db
             db.getRows('historicalquote', {
-                symbol: s.symbol
+                symbol: q.symbol
             }, (succ, result) => {
-                console.log('=====> succ:', succ, " result:", result);
+                console.log('succ:', succ, " result:", result);
                 if (succ && result.length > 0) {
                     console.log(result);
                     let where = {
@@ -181,41 +181,43 @@ function addHistoricalQuote(q) {
 }
 
 /**
- * Add a option-chain quote
- * Add a single option-chain quote to the option-chain database. The key here is the symbol. The option-chain is a flexible
+ * Add a option chain quote
+ * Add a single optionchain quote to the optionchain database. The key here is the symbol. The optionchain is a flexible
  * object with no constraint on what is included.
- * @param object { symbol: "TSLA", option-chain: {} }
+ * @param object { symbol: "TSLA", expiry: <epoch>, optionchain: {} }
  */
 function addOptionChainQuote(q) {
     return new Promise((resolve, reject)=> {
         // check schema
-        if(!q.symbol || !q.option-chain) {
+        if(!q.symbol || !q.expiry || !q.optionchain) {
             reject('addQuote: input argument does not match schema!');
         }
 
-        if (db.valid('option-chain')) {
+        if (db.valid('optionchain')) {
             // check if symbol already exists in db
-            db.getRows('option-chain', {
-                symbol: s.symbol
+            db.getRows('optionchain', {
+                symbol: q.symbol,
+                expiry: q.expiry
             }, (succ, result) => {
-                console.log('=====> succ:', succ, " result:", result);
+                console.log('succ:', succ, " result:", result);
                 if (succ && result.length > 0) {
                     console.log(result);
                     let where = {
-                        "symbol": q.symbol
+                        "symbol": q.symbol,
+                        "expiry": q.expiry
                     };
 
                     let set = {
-                        "option-chain": q.option-chain
+                        "optionchain": q.optionchain
                     };
 
-                    db.updateRow('option-chain', where, set, (succ, msg) => {
+                    db.updateRow('optionchain', where, set, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
                         console.log("Update: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 } else {
-                    db.insertTableContent('option-chain', q, (succ, msg) => {
+                    db.insertTableContent('optionchain', q, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
                         console.log("Insert: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
