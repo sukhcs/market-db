@@ -55,11 +55,12 @@ function addSymbol(s) {
 
         if (db.valid('symbol')) {
             // check if symbol already exists in db
-            let term = s.symbol;
-
-            db.search('symbol', 'symbol', term, (succ, data) => {
-                if (succ && data.length > 0) {
-                    console.log(data);
+            db.getRows('symbol', {
+                symbol: s.symbol
+            }, (succ, result) => {
+                console.log('=====> succ:', succ, " result:", result);
+                if (succ && result.length > 0) {
+                    console.log(result);
                     let where = {
                         "symbol": s.symbol
                     };
@@ -102,11 +103,12 @@ function addQuote(q) {
 
         if (db.valid('quote')) {
             // check if symbol already exists in db
-            let term = q.symbol;
-
-            db.search('quote', 'symbol', term, (succ, data) => {
-                if (succ && data.length > 0) {
-                    console.log(data);
+            db.getRows('quote', {
+                symbol: s.symbol
+            }, (succ, result) => {
+                console.log('=====> succ:', succ, " result:", result);
+                if (succ && result.length > 0) {
+                    console.log(result);
                     let where = {
                         "symbol": q.symbol
                     };
@@ -147,11 +149,12 @@ function addHistoricalQuote(q) {
 
         if (db.valid('historicalquote')) {
             // check if symbol already exists in db
-            let term = q.symbol;
-
-            db.search('historicalquote', 'symbol', term, (succ, data) => {
-                if (succ && data.length > 0) {
-                    console.log(data);
+            db.getRows('historicalquote', {
+                symbol: s.symbol
+            }, (succ, result) => {
+                console.log('=====> succ:', succ, " result:", result);
+                if (succ && result.length > 0) {
+                    console.log(result);
                     let where = {
                         "symbol": q.symbol
                     };
@@ -192,11 +195,12 @@ function addOptionChainQuote(q) {
 
         if (db.valid('option-chain')) {
             // check if symbol already exists in db
-            let term = q.symbol;
-
-            db.search('option-chain', 'symbol', term, (succ, data) => {
-                if (succ && data.length > 0) {
-                    console.log(data);
+            db.getRows('option-chain', {
+                symbol: s.symbol
+            }, (succ, result) => {
+                console.log('=====> succ:', succ, " result:", result);
+                if (succ && result.length > 0) {
+                    console.log(result);
                     let where = {
                         "symbol": q.symbol
                     };
