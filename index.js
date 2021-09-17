@@ -1,5 +1,5 @@
 const db = require('electron-db');
-
+const moment = require('moment-timezone');
 /**
  * Creates database tables
  * must call this function at first, before anything else

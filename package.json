@@ -1,6 +1,6 @@
 {
   "name": "market-db",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Electron module that could be used for storing market data in json based database tables",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,8 @@
   "author": "Sukhvinder Singh <sukh.chauhan@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "electron-db": "^0.15.7"
+    "electron-db": "^0.15.7",
+    "moment-timezone": "^0.5.33"
   },
   "repository": {
     "type": "git",
