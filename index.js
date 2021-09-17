@@ -82,8 +82,6 @@ function addSymbol(s) {
                     });
                 }
             });
-
-
         }
     });
 }
@@ -114,7 +112,8 @@ function addQuote(q) {
                     };
 
                     let set = {
-                        "quote": q.quote
+                        "quote": q.quote,
+                        "timestamp": moment(new Date()).unix()
                     };
 
                     db.updateRow('quote', where, set, (succ, msg) => {
@@ -123,6 +122,7 @@ function addQuote(q) {
                         succ ? resolve(msg) : reject(msg);
                     });
                 } else {
+                    q.timestamp = moment(new Date()).unix();
                     db.insertTableContent('quote', q, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
                         console.log("Insert: " + succ + ' Message:', msg);
@@ -160,7 +160,8 @@ function addHistoricalQuote(q) {
                     };
 
                     let set = {
-                        "historicalquote": q.historicalquote
+                        "historicalquote": q.historicalquote,
+                        "timestamp": moment(new Date()).unix()
                     };
 
                     db.updateRow('historicalquote', where, set, (succ, msg) => {
@@ -169,6 +170,7 @@ function addHistoricalQuote(q) {
                         succ ? resolve(msg) : reject(msg);
                     });
                 } else {
+                    q.timestamp = moment(new Date()).unix();
                     db.insertTableContent('historicalquote', q, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
                         console.log("Insert: " + succ + ' Message:', msg);
@@ -208,7 +210,8 @@ function addOptionChainQuote(q) {
                     };
 
                     let set = {
-                        "optionchain": q.optionchain
+                        "optionchain": q.optionchain,
+                        "timestamp": moment(new Date()).unix()
                     };
 
                     db.updateRow('optionchain', where, set, (succ, msg) => {
@@ -217,6 +220,7 @@ function addOptionChainQuote(q) {
                         succ ? resolve(msg) : reject(msg);
                     });
                 } else {
+                    q.timestamp = moment(new Date()).unix();
                     db.insertTableContent('optionchain', q, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
                         console.log("Insert: " + succ + ' Message:', msg);
