@@ -1,5 +1,17 @@
 const db = require('electron-db');
 const moment = require('moment-timezone');
+
+let _tables = ['symbol', 'quote', 'historicalquote', 'optionchain'];
+
+// in seconds
+const ONEMIN = 60;
+const FIVEMIN = 300;
+const TENMIN = 600;
+const QUARTERHOUR = 900;
+const HALFHOUR = 1800;
+const HOUR = 3600;
+const DAY = 3600 * 24;
+
 /**
  * Creates database tables
  * must call this function at first, before anything else
@@ -234,7 +246,59 @@ function addOptionChainQuote(q) {
     });
 }
 
+/**
+ * Check the timestamp on a table and returns whether the current timestamp is within the 'after' window
+ * if timestamp is within 'after', fetch is set to false; else true;
+ * @param table - name of the table
+ * @param params { symbol: "TSLA", expiry: <epoch> }; expiry only required for optionchain table
+ * @params after - the amount of time that must be elapsed before another fetch is required
+ * @return { fetch: boolean, seconds: <time left>}
+ */
+function checkTimestamp(table, params, after) {
+    return new Promise((resolve, reject) => {
+        // basic checks
+        if(!_tables.includes(table)) {
+            reject('No valid table name. Provide, one of ', _tables.join(','));
+        }
 
+        if(!params) {
+            reject('No valid params!');
+        }
+
+        if(!params.symbol) {
+            reject('No valid params! symbol definition missing');
+        }
+
+        if(table === 'optionchain' && !params.expiry) {
+            reject('No valid params! expiry definition missing for optionchain query');
+        }
+
+        if(!after) {
+            // set after to FIVEMIN
+            after = FIVEMIN;
+        }
+
+        if (db.valid(table)) {
+            // check if symbol already exists in db
+            db.getRows(table, params, (succ, result) => {
+                console.log('checkTimestamp :: succ:', succ, " result:", result);
+                if (succ && result.length > 0) {
+                    // get timestamp from result
+                    const ts = result.timestamp;
+                    // get current time
+                    const currTS = moment(new Date()).unix();
+                    // check difference
+                    const diff = currTS - ts;
+                    let rs = { fetch: diff > 0, seconds: diff };
+                    console.log('checkTimestamp :: ', rs);
+                    resolve(rs);
+                } else {
+                    reject('could not get timestamp!', succ, result);
+                }
+            });
+        }
+    });
+}
 
 // Export the public available functions
 module.exports = {
@@ -242,5 +306,6 @@ module.exports = {
     addSymbol,
     addQuote,
     addHistoricalQuote,
-    addOptionChainQuote
+    addOptionChainQuote,
+    checkTimestamp
 };
