@@ -66,7 +66,8 @@ function addSymbol(s) {
                     };
 
                     let set = {
-                        "name": s.name
+                        "name": s.name,
+                        "timestamp": moment(new Date()).unix()
                     };
 
                     db.updateRow('symbol', where, set, (succ, msg) => {
@@ -75,6 +76,7 @@ function addSymbol(s) {
                         succ ? resolve(msg) : reject(msg);
                     });
                 } else {
+                    s.timestamp = moment(new Date()).unix();
                     db.insertTableContent('symbol', s, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
                         console.log("Insert: " + succ + ' Message:', msg);
