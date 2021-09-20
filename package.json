@@ -1,6 +1,6 @@
 {
   "name": "market-db",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Electron module that could be used for storing market data in json based database tables",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,8 @@
   "license": "MIT",
   "dependencies": {
     "electron-db": "^0.15.7",
-    "moment-timezone": "^0.5.33"
+    "moment-timezone": "^0.5.33",
+    "winston": "^3.3.3"
   },
   "repository": {
     "type": "git",

@@ -1,5 +1,6 @@
 const db = require('electron-db');
 const moment = require('moment-timezone');
+const Logger = require('./logger');
 
 let _tables = ['symbol', 'quote', 'historicalquote', 'optionchain'];
 
@@ -24,30 +25,26 @@ function initDB() {
         let success = true;
         let message = [];
         if(!logger) {
-            reject('initialize logger first by calling initLogger');
+            reject('[MARKET-DB] initialize logger first by calling initLogger');
         }
         db.createTable('symbol', (succ, msg) => {
             // succ - boolean, tells if the call is successful
             success = succ && success ? true : false;
-            logger.debug("Create: " + succ + ' Message:', msg);
             message.push(msg);
         });
         db.createTable('quote', (succ, msg) => {
             // succ - boolean, tells if the call is successful
             success = succ && success ? true : false;
-            logger.debug("Create: " + succ + ' Message:', msg);
             message.push(msg);
         });
         db.createTable('historicalquote', (succ, msg) => {
             // succ - boolean, tells if the call is successful
             success = succ && success ? true : false;
-            logger.debug("Create: " + succ + ' Message:', msg);
             message.push(msg);
         });
         db.createTable('optionchain', (succ, msg) => {
             // succ - boolean, tells if the call is successful
             success = succ && success ? true : false;
-            logger.debug("Create: " + succ + ' Message:', msg);
             message.push(msg);
         });
         if(success) {
@@ -58,8 +55,13 @@ function initDB() {
     });
 }
 
-function initLogger(_logger) {
-    logger = _logger;
+function initLogger(env) {
+    if(!env) {
+        env = 'development';
+    }
+    logger = Logger.createLogger(env);
+    logger.debug('[MARKET-DB] Logger initialized!');
+    return logger;
 }
 
 /**
@@ -70,7 +72,7 @@ function initLogger(_logger) {
 function addSymbol(s) {
     return new Promise((resolve, reject)=> {
         if(!logger) {
-            reject('initialize logger first by calling initLogger');
+            reject('[MARKET-DB] initialize logger first by calling initLogger');
         }
         // check schema
         if(!s.symbol || !s.name) {
@@ -305,8 +307,9 @@ function checkTimestamp(table, params, after) {
         if (db.valid(table)) {
             // check if symbol already exists in db
             db.getRows(table, params, (succ, result) => {
-                logger.debug('checkTimestamp :: succ: ', succ," result: ", result);
-                if(succ && !result) {
+                logger.debug('++checkTimestamp :: succ: ', succ," result: ", result);
+                if(succ && result == '') {
+                    logger.debug('fetch anyways');
                     // fetch anyway, there's no table, or table is empty
                     resolve({ fetch: true, seconds: 0, record: {} });
                 }
@@ -318,10 +321,9 @@ function checkTimestamp(table, params, after) {
                     // check difference
                     const diff = currTS - (ts + after);
                     let rs = { fetch: diff > 0, seconds: diff, record: result[0] };
-                    logger.debug('++++++++++++checkTimestamp :: ', rs, '+++++ after:', after);
                     resolve(rs);
                 } else {
-                    reject('could not get timestamp!', succ, result);
+                    reject('[MARKET-DB] could not get timestamp!', succ, result);
                 }
             });
         }
