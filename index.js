@@ -305,7 +305,11 @@ function checkTimestamp(table, params, after) {
         if (db.valid(table)) {
             // check if symbol already exists in db
             db.getRows(table, params, (succ, result) => {
-                logger.debug('checkTimestamp :: succ:', succ, " result:", result);
+                logger.debug('checkTimestamp :: succ: ', succ," result: ", result);
+                if(succ && !result) {
+                    // fetch anyway, there's no table, or table is empty
+                    resolve({ fetch: true, seconds: 0, record: {} });
+                }
                 if (succ && result.length > 0) {
                     // get timestamp from result
                     const ts = result[0].timestamp;
