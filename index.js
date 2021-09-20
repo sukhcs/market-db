@@ -55,11 +55,11 @@ function initDB() {
     });
 }
 
-function initLogger(env) {
+function initLogger(env, logLevel) {
     if(!env) {
         env = 'development';
     }
-    logger = Logger.createLogger(env);
+    logger = Logger.createLogger(env, logLevel);
     logger.debug('[MARKET-DB] Logger initialized!');
     return logger;
 }
@@ -76,7 +76,7 @@ function addSymbol(s) {
         }
         // check schema
         if(!s.symbol || !s.name) {
-            reject('addSymbol: input argument does not match schema!');
+            reject('[MARKET-DB] addSymbol: input argument does not match schema!');
         }
 
         if (db.valid('symbol')) {
@@ -84,9 +84,7 @@ function addSymbol(s) {
             db.getRows('symbol', {
                 symbol: s.symbol
             }, (succ, result) => {
-                logger.debug('succ:', succ, " result:", result);
                 if (succ && result.length > 0) {
-                    logger.debug(result);
                     let where = {
                         "symbol": s.symbol
                     };
@@ -98,14 +96,14 @@ function addSymbol(s) {
 
                     db.updateRow('symbol', where, set, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        logger.debug("Update: " + succ + ' Message:', msg);
+                        logger.silly("[MARKET-DB] Symbol Insert: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 } else {
                     s.timestamp = moment(new Date()).unix();
                     db.insertTableContent('symbol', s, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        logger.debug("Insert: " + succ + ' Message:', msg);
+                        logger.silly("[MARKET-DB] Symbol Insert: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 }
@@ -123,11 +121,11 @@ function addSymbol(s) {
 function addQuote(q) {
     return new Promise((resolve, reject)=> {
         if(!logger) {
-            reject('initialize logger first by calling initLogger');
+            reject('[MARKET-DB] initialize logger first by calling initLogger');
         }
         // check schema
         if(!q.symbol || !q.quote) {
-            reject('addQuote: input argument does not match schema!');
+            reject('[MARKET-DB] addQuote: input argument does not match schema!');
         }
 
         if (db.valid('quote')) {
@@ -135,9 +133,7 @@ function addQuote(q) {
             db.getRows('quote', {
                 symbol: q.symbol
             }, (succ, result) => {
-                logger.debug('succ:', succ, " result:", result);
                 if (succ && result.length > 0) {
-                    logger.debug(result);
                     let where = {
                         "symbol": q.symbol
                     };
@@ -149,14 +145,14 @@ function addQuote(q) {
 
                     db.updateRow('quote', where, set, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        logger.debug("Update: " + succ + ' Message:', msg);
+                        logger.silly("[MARKET-DB] Quote Update: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 } else {
                     q.timestamp = moment(new Date()).unix();
                     db.insertTableContent('quote', q, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        logger.debug("Insert: " + succ + ' Message:', msg);
+                        logger.silly("[MARKET-DB] Quote Insert: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 }
@@ -174,11 +170,11 @@ function addQuote(q) {
 function addHistoricalQuote(q) {
     return new Promise((resolve, reject)=> {
         if(!logger) {
-            reject('initialize logger first by calling initLogger');
+            reject('[MARKET-DB] initialize logger first by calling initLogger');
         }
         // check schema
         if(!q.symbol || !q.historicalquote) {
-            reject('addQuote: input argument does not match schema!');
+            reject('[MARKET-DB] addHistoricalQuote: input argument does not match schema!');
         }
 
         if (db.valid('historicalquote')) {
@@ -200,14 +196,14 @@ function addHistoricalQuote(q) {
 
                     db.updateRow('historicalquote', where, set, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        logger.debug("Update: " + succ + ' Message:', msg);
+                        logger.debug("[MARKET-DB] HistQuote Update: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 } else {
                     q.timestamp = moment(new Date()).unix();
                     db.insertTableContent('historicalquote', q, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        logger.debug("Insert: " + succ + ' Message:', msg);
+                        logger.debug("[MARKET-DB] HistQuote Insert: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 }
@@ -225,11 +221,11 @@ function addHistoricalQuote(q) {
 function addOptionChainQuote(q) {
     return new Promise((resolve, reject)=> {
         if(!logger) {
-            reject('initialize logger first by calling initLogger');
+            reject('[MARKET-DB] initialize logger first by calling initLogger');
         }
         // check schema
         if(!q.symbol || !q.expiry || !q.optionchain) {
-            reject('addQuote: input argument does not match schema!');
+            reject('[MARKET-DB] addOptionChain: input argument does not match schema!');
         }
 
         if (db.valid('optionchain')) {
@@ -238,9 +234,7 @@ function addOptionChainQuote(q) {
                 symbol: q.symbol,
                 expiry: q.expiry
             }, (succ, result) => {
-                logger.debug('succ:', succ, " result:", result);
                 if (succ && result.length > 0) {
-                    logger.debug(result);
                     let where = {
                         "symbol": q.symbol,
                         "expiry": q.expiry
@@ -253,14 +247,14 @@ function addOptionChainQuote(q) {
 
                     db.updateRow('optionchain', where, set, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        logger.debug("Update: " + succ + ' Message:', msg);
+                        logger.debug("[MARKET-DB] OptionChain Update: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 } else {
                     q.timestamp = moment(new Date()).unix();
                     db.insertTableContent('optionchain', q, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        logger.debug("Insert: " + succ + ' Message:', msg);
+                        logger.debug("[MARKET-DB] OptionChain Insert: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 }
@@ -280,23 +274,23 @@ function addOptionChainQuote(q) {
 function checkTimestamp(table, params, after) {
     return new Promise((resolve, reject) => {
         if(!logger) {
-            reject('initialize logger first by calling initLogger');
+            reject('[MARKET-DB] initialize logger first by calling initLogger');
         }
         // basic checks
         if(!_tables.includes(table)) {
-            reject('No valid table name. Provide, one of ', _tables.join(','));
+            reject('[MARKET-DB] checkTimestamp: No valid table name. Provide, one of ', _tables.join(','));
         }
 
         if(!params) {
-            reject('No valid params!');
+            reject('[MARKET-DB] checkTimestamp: No valid params!');
         }
 
         if(!params.symbol) {
-            reject('No valid params! symbol definition missing');
+            reject('[MARKET-DB] checkTimestamp: No valid params! symbol definition missing');
         }
 
         if(table === 'optionchain' && !params.expiry) {
-            reject('No valid params! expiry definition missing for optionchain query');
+            reject('[MARKET-DB] checkTimestamp: No valid params! expiry definition missing for optionchain query');
         }
 
         if(!after) {
@@ -307,9 +301,9 @@ function checkTimestamp(table, params, after) {
         if (db.valid(table)) {
             // check if symbol already exists in db
             db.getRows(table, params, (succ, result) => {
-                logger.debug('++checkTimestamp :: succ: ', succ," result: ", result);
+                logger.silly('[MARKET-DB] ++checkTimestamp :: succ: ', succ," result: ", result);
                 if(succ && result == '') {
-                    logger.debug('fetch anyways');
+                    logger.debug('[MARKET-DB] null result, fetch anyways');
                     // fetch anyway, there's no table, or table is empty
                     resolve({ fetch: true, seconds: 0, record: {} });
                 }
@@ -321,9 +315,10 @@ function checkTimestamp(table, params, after) {
                     // check difference
                     const diff = currTS - (ts + after);
                     let rs = { fetch: diff > 0, seconds: diff, record: result[0] };
+                    logger.debug('[MARKET-DB] checkTimestamp: rs::', rs);
                     resolve(rs);
                 } else {
-                    reject('[MARKET-DB] could not get timestamp!', succ, result);
+                    reject('[MARKET-DB] checkTimestamp: could not get timestamp!', succ, result);
                 }
             });
         }
