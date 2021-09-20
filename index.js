@@ -29,25 +29,25 @@ function initDB() {
         db.createTable('symbol', (succ, msg) => {
             // succ - boolean, tells if the call is successful
             success = succ && success ? true : false;
-            logger.info("Create: " + succ + ' Message:', msg);
+            logger.debug("Create: " + succ + ' Message:', msg);
             message.push(msg);
         });
         db.createTable('quote', (succ, msg) => {
             // succ - boolean, tells if the call is successful
             success = succ && success ? true : false;
-            logger.info("Create: " + succ + ' Message:', msg);
+            logger.debug("Create: " + succ + ' Message:', msg);
             message.push(msg);
         });
         db.createTable('historicalquote', (succ, msg) => {
             // succ - boolean, tells if the call is successful
             success = succ && success ? true : false;
-            logger.info("Create: " + succ + ' Message:', msg);
+            logger.debug("Create: " + succ + ' Message:', msg);
             message.push(msg);
         });
         db.createTable('optionchain', (succ, msg) => {
             // succ - boolean, tells if the call is successful
             success = succ && success ? true : false;
-            logger.info("Create: " + succ + ' Message:', msg);
+            logger.debug("Create: " + succ + ' Message:', msg);
             message.push(msg);
         });
         if(success) {
@@ -82,9 +82,9 @@ function addSymbol(s) {
             db.getRows('symbol', {
                 symbol: s.symbol
             }, (succ, result) => {
-                logger.info('succ:', succ, " result:", result);
+                logger.debug('succ:', succ, " result:", result);
                 if (succ && result.length > 0) {
-                    logger.info(result);
+                    logger.debug(result);
                     let where = {
                         "symbol": s.symbol
                     };
@@ -96,14 +96,14 @@ function addSymbol(s) {
 
                     db.updateRow('symbol', where, set, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        logger.info("Update: " + succ + ' Message:', msg);
+                        logger.debug("Update: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 } else {
                     s.timestamp = moment(new Date()).unix();
                     db.insertTableContent('symbol', s, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        logger.info("Insert: " + succ + ' Message:', msg);
+                        logger.debug("Insert: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 }
@@ -133,9 +133,9 @@ function addQuote(q) {
             db.getRows('quote', {
                 symbol: q.symbol
             }, (succ, result) => {
-                logger.info('succ:', succ, " result:", result);
+                logger.debug('succ:', succ, " result:", result);
                 if (succ && result.length > 0) {
-                    logger.info(result);
+                    logger.debug(result);
                     let where = {
                         "symbol": q.symbol
                     };
@@ -147,14 +147,14 @@ function addQuote(q) {
 
                     db.updateRow('quote', where, set, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        logger.info("Update: " + succ + ' Message:', msg);
+                        logger.debug("Update: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 } else {
                     q.timestamp = moment(new Date()).unix();
                     db.insertTableContent('quote', q, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        logger.info("Insert: " + succ + ' Message:', msg);
+                        logger.debug("Insert: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 }
@@ -184,9 +184,9 @@ function addHistoricalQuote(q) {
             db.getRows('historicalquote', {
                 symbol: q.symbol
             }, (succ, result) => {
-                logger.info('succ:', succ, " result:", result);
+                logger.debug('succ:', succ, " result:", result);
                 if (succ && result.length > 0) {
-                    logger.info(result);
+                    logger.debug(result);
                     let where = {
                         "symbol": q.symbol
                     };
@@ -198,14 +198,14 @@ function addHistoricalQuote(q) {
 
                     db.updateRow('historicalquote', where, set, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        logger.info("Update: " + succ + ' Message:', msg);
+                        logger.debug("Update: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 } else {
                     q.timestamp = moment(new Date()).unix();
                     db.insertTableContent('historicalquote', q, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        logger.info("Insert: " + succ + ' Message:', msg);
+                        logger.debug("Insert: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 }
@@ -236,9 +236,9 @@ function addOptionChainQuote(q) {
                 symbol: q.symbol,
                 expiry: q.expiry
             }, (succ, result) => {
-                logger.info('succ:', succ, " result:", result);
+                logger.debug('succ:', succ, " result:", result);
                 if (succ && result.length > 0) {
-                    logger.info(result);
+                    logger.debug(result);
                     let where = {
                         "symbol": q.symbol,
                         "expiry": q.expiry
@@ -251,14 +251,14 @@ function addOptionChainQuote(q) {
 
                     db.updateRow('optionchain', where, set, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        logger.info("Update: " + succ + ' Message:', msg);
+                        logger.debug("Update: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 } else {
                     q.timestamp = moment(new Date()).unix();
                     db.insertTableContent('optionchain', q, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        logger.info("Insert: " + succ + ' Message:', msg);
+                        logger.debug("Insert: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 }
@@ -273,7 +273,7 @@ function addOptionChainQuote(q) {
  * @param table - name of the table
  * @param params { symbol: "TSLA", expiry: <epoch> }; expiry only required for optionchain table
  * @params after - the amount of time that must be elapsed before another fetch is required
- * @return { fetch: boolean, seconds: <time left>}
+ * @return { fetch: boolean, seconds: <time left>, record: <matched row>}
  */
 function checkTimestamp(table, params, after) {
     return new Promise((resolve, reject) => {
@@ -305,7 +305,7 @@ function checkTimestamp(table, params, after) {
         if (db.valid(table)) {
             // check if symbol already exists in db
             db.getRows(table, params, (succ, result) => {
-                logger.info('checkTimestamp :: succ:', succ, " result:", result);
+                logger.debug('checkTimestamp :: succ:', succ, " result:", result);
                 if (succ && result.length > 0) {
                     // get timestamp from result
                     const ts = result[0].timestamp;
@@ -313,8 +313,8 @@ function checkTimestamp(table, params, after) {
                     const currTS = moment(new Date()).unix();
                     // check difference
                     const diff = currTS - ts;
-                    let rs = { fetch: diff > 0, seconds: diff };
-                    logger.info('checkTimestamp :: ', rs);
+                    let rs = { fetch: diff > 0, seconds: diff, record: result[0] };
+                    logger.debug('checkTimestamp :: ', rs);
                     resolve(rs);
                 } else {
                     reject('could not get timestamp!', succ, result);
