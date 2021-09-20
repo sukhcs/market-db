@@ -312,9 +312,9 @@ function checkTimestamp(table, params, after) {
                     // get current time
                     const currTS = moment(new Date()).unix();
                     // check difference
-                    const diff = currTS - ts;
+                    const diff = currTS - (ts + after);
                     let rs = { fetch: diff > 0, seconds: diff, record: result[0] };
-                    logger.debug('checkTimestamp :: ', rs);
+                    logger.debug('++++++++++++checkTimestamp :: ', rs, '+++++ after:', after);
                     resolve(rs);
                 } else {
                     reject('could not get timestamp!', succ, result);
