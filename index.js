@@ -289,9 +289,10 @@ function checkTimestamp(table, params, after) {
             reject('[MARKET-DB] checkTimestamp: No valid params! symbol definition missing');
         }
 
-        if(table === 'optionchain' && !params.expiry) {
-            reject('[MARKET-DB] checkTimestamp: No valid params! expiry definition missing for optionchain query');
-        }
+        // when db is empty, there's no way to evaluate expiry
+        // if(table === 'optionchain' && !params.expiry) {
+        //     reject('[MARKET-DB] checkTimestamp: No valid params! expiry definition missing for optionchain query');
+        // }
 
         if(!after) {
             // set after to FIVEMIN
