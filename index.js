@@ -228,6 +228,10 @@ function addOptionChainQuote(q) {
             reject('[MARKET-DB] addOptionChain: input argument does not match schema!');
         }
 
+        // bug fix
+        q.symbol = q.symbol.toString().trim();
+        q.expiry = q.expiry.toString().trim();
+
         if (db.valid('optionchain')) {
             // check if symbol already exists in db
             db.getRows('optionchain', {
@@ -236,8 +240,8 @@ function addOptionChainQuote(q) {
             }, (succ, result) => {
                 if (succ && result.length > 0) {
                     let where = {
-                        "symbol": q.symbol.trim(),
-                        "expiry": q.expiry.trim()
+                        "symbol": q.symbol,
+                        "expiry": q.expiry
                     };
 
                     let set = {
