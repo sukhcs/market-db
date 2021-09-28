@@ -236,8 +236,8 @@ function addOptionChainQuote(q) {
             }, (succ, result) => {
                 if (succ && result.length > 0) {
                     let where = {
-                        "symbol": q.symbol,
-                        "expiry": q.expiry
+                        "symbol": q.symbol.trim(),
+                        "expiry": q.expiry.trim()
                     };
 
                     let set = {
