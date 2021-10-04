@@ -70,6 +70,7 @@ function initLogger(env, logLevel) {
  * @param object { symbol: "TSLA", name: "TSLA Inc." }
  */
 function addSymbol(s) {
+    const cont = '[MARKET-DB][addSymbol]';
     return new Promise((resolve, reject)=> {
         if(!logger) {
             reject('[MARKET-DB] initialize logger first by calling initLogger');
@@ -84,6 +85,7 @@ function addSymbol(s) {
             db.getRows('symbol', {
                 symbol: s.symbol
             }, (succ, result) => {
+                console.log(cont, succ, result.length);
                 if (succ && result.length > 0) {
                     let where = {
                         "symbol": s.symbol
@@ -119,6 +121,7 @@ function addSymbol(s) {
  * @param object { symbol: "TSLA", quote: {} }
  */
 function addQuote(q) {
+    const cont = '[MARKET-DB][addQuote]'
     return new Promise((resolve, reject)=> {
         if(!logger) {
             reject('[MARKET-DB] initialize logger first by calling initLogger');
@@ -133,6 +136,7 @@ function addQuote(q) {
             db.getRows('quote', {
                 symbol: q.symbol
             }, (succ, result) => {
+                console.log(cont, succ, result.length);
                 if (succ && result.length > 0) {
                     let where = {
                         "symbol": q.symbol
@@ -145,14 +149,14 @@ function addQuote(q) {
 
                     db.updateRow('quote', where, set, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        logger.silly("[MARKET-DB] Quote Update: " + succ + ' Message:', msg);
+                        logger.debug("[MARKET-DB] Quote Update: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 } else {
                     q.timestamp = moment(new Date()).unix();
                     db.insertTableContent('quote', q, (succ, msg) => {
                         // succ - boolean, tells if the call is successful
-                        logger.silly("[MARKET-DB] Quote Insert: " + succ + ' Message:', msg);
+                        logger.debug("[MARKET-DB] Quote Insert: " + succ + ' Message:', msg);
                         succ ? resolve(msg) : reject(msg);
                     });
                 }
@@ -168,6 +172,7 @@ function addQuote(q) {
  * @param object { symbol: "TSLA", historicalquote: {} }
  */
 function addHistoricalQuote(q) {
+    const cont = '[MARKET-DB][addHistoricalQuote]'
     return new Promise((resolve, reject)=> {
         if(!logger) {
             reject('[MARKET-DB] initialize logger first by calling initLogger');
@@ -182,6 +187,7 @@ function addHistoricalQuote(q) {
             db.getRows('historicalquote', {
                 symbol: q.symbol
             }, (succ, result) => {
+                console.log(cont, succ, result.length);
                 logger.debug('succ:', succ, " result:", result);
                 if (succ && result.length > 0) {
                     logger.debug(result);
@@ -219,33 +225,33 @@ function addHistoricalQuote(q) {
  * @param object { symbol: "TSLA", expiry: <epoch>, optionchain: {} }
  */
 function addOptionChainQuote(q) {
+    const cont = '[MARKET-DB][addOptionChainQuote]'
     return new Promise((resolve, reject)=> {
         if(!logger) {
             reject('[MARKET-DB] initialize logger first by calling initLogger');
         }
         // check schema
-        if(!q.symbol || !q.expiry || !q.optionchain) {
+        if(!q.symbol || !q.optionchain_list) {
             reject('[MARKET-DB] addOptionChain: input argument does not match schema!');
         }
 
         // bug fix
         q.symbol = q.symbol.toString().trim();
-        q.expiry = q.expiry.toString().trim();
 
         if (db.valid('optionchain')) {
             // check if symbol already exists in db
             db.getRows('optionchain', {
-                symbol: q.symbol,
-                expiry: q.expiry
+                symbol: q.symbol
             }, (succ, result) => {
+                console.log(cont, succ, result.length);
+                //console.log('optionchain: succ:', succ, ' result:', result);
                 if (succ && result.length > 0) {
                     let where = {
                         "symbol": q.symbol,
-                        "expiry": q.expiry
                     };
 
                     let set = {
-                        "optionchain": q.optionchain,
+                        "optionchain_list": q.optionchain_list,
                         "timestamp": moment(new Date()).unix()
                     };
 
