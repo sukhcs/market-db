@@ -3,7 +3,7 @@ const moment = require('moment-timezone');
 const Logger = require('./logger');
 
 const electron = require('electron');
-const app = electron.app || electron.remote.app;
+const app = electron.app;
 
 let _tables = ['symbol', 'quote', 'historicalquote', 'optionchain'];
 
